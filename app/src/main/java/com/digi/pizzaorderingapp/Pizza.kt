@@ -11,6 +11,11 @@ data class Pizza(
     val pizzaType: PizzaType,
 )
 
+data class Topping(
+    val title: String,
+    val price: Double,
+)
+
 fun dummyPizzaRepository(): List<Pizza> {
     return listOf(
         Pizza(
