@@ -14,6 +14,7 @@ data class Pizza(
 data class Topping(
     val title: String,
     val price: Double,
+    var isChecked: Boolean = false,
 )
 
 fun dummyPizzaRepository(): List<Pizza> {
@@ -42,5 +43,17 @@ fun dummyPizzaRepository(): List<Pizza> {
             price = 299.00,
             pizzaType = PizzaType.VEG
         ),
+    )
+}
+
+fun topicRepository(): List<Topping> {
+    return listOf(
+        Topping("Cheese", 100.00),
+        Topping("Tomato", 50.00),
+        Topping("Onion", 50.00),
+        Topping("Capsicum", 50.00),
+        Topping("Mushroom", 50.00),
+        Topping("Olive", 100.00),
+        Topping("Paneer", 100.00),
     )
 }

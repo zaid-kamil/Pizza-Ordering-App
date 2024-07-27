@@ -59,7 +59,7 @@ private fun PizzaSelectionPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ToppingSelectionPreview() {
     ToppingSelectionScreen()
