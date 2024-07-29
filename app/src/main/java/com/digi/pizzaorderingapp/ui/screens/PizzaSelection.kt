@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,10 +49,11 @@ import com.digi.pizzaorderingapp.dummyPizzaRepository
 @Composable
 fun PizzaSelectionScreen(
     modifier: Modifier = Modifier,
-    onConfirm: () -> Unit, // code hoisting
+    onConfirm: (Int) -> Unit, // code hoisting
 ) {
     // variables
     var selectedPizza by remember { mutableStateOf<Pizza?>(null) }
+    var selectedPizzaIdx by remember { mutableIntStateOf(-1) }
 
     Box(
         modifier = modifier
@@ -63,9 +65,12 @@ fun PizzaSelectionScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(dummyPizzaRepository()) {
+            itemsIndexed(dummyPizzaRepository()) { idx, it ->
                 PizzaItem(pizza = it) { item ->
                     selectedPizza = item
+                    dummyPizzaRepository().indexOf(item).let { itemIdx ->
+                        selectedPizzaIdx = itemIdx
+                    }
                 }
             }
         }
@@ -89,7 +94,11 @@ fun PizzaSelectionScreen(
             }
         }
         FloatingActionButton(
-            onClick = { onConfirm() },
+            onClick = {
+                if (selectedPizzaIdx != -1) {
+                    onConfirm(selectedPizzaIdx)
+                }
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
@@ -112,8 +121,9 @@ fun PizzaItem(
     onPizzaSelected: (Pizza) -> Unit = {},
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { onPizzaSelected(pizza) }
+        modifier = Modifier
+            .fillMaxWidth(),
+        onClick = { onPizzaSelected(pizza) },
     ) {
         Row(
             modifier = Modifier
@@ -178,7 +188,7 @@ private fun PizzaItemPreview() {
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PizzaSelectionPreview() {
     PizzaSelectionScreen() {

@@ -10,9 +10,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.digi.pizzaorderingapp.ui.screens.CheckoutScreen
 import com.digi.pizzaorderingapp.ui.screens.PizzaSelectionScreen
 import com.digi.pizzaorderingapp.ui.screens.ToppingSelectionScreen
@@ -27,21 +29,27 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "pizza_selection") {
-                        composable("pizza_selection"){
+                        composable("pizza_selection") {
                             PizzaSelectionScreen(
-                                modifier=Modifier.padding(innerPadding)
-                            ){
-                                navController.navigate("topping_selection")
+                                modifier = Modifier.padding(innerPadding)
+                            ) {
+                                navController.navigate("topping_selection/$it") // it refers to selected Idx
                             }
                         }
-                        composable("topping_selection"){
+//                      // add route argument
+                        composable("topping_selection/{pizzaId}",
+                            arguments = listOf(navArgument("pizzaId") {
+                                type = NavType.IntType
+                            })
+                        ) {
                             ToppingSelectionScreen(
-                                modifier=Modifier.padding(innerPadding)
+                                modifier = Modifier.padding(innerPadding),
+                                pizzaId = it.arguments?.getInt("pizzaId") ?: 0
                             )
                         }
-                        composable("checkout"){
+                        composable("checkout") {
                             CheckoutScreen(
-                                modifier=Modifier.padding(innerPadding)
+                                modifier = Modifier.padding(innerPadding)
                             )
                         }
                     }
@@ -54,7 +62,7 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 private fun PizzaSelectionPreview() {
-    PizzaSelectionScreen(){
+    PizzaSelectionScreen() {
 
     }
 }
@@ -62,7 +70,7 @@ private fun PizzaSelectionPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ToppingSelectionPreview() {
-    ToppingSelectionScreen()
+    ToppingSelectionScreen(pizzaId = 0)
 }
 
 @Preview

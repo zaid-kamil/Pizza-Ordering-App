@@ -21,10 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.digi.pizzaorderingapp.Topping
+import com.digi.pizzaorderingapp.dummyPizzaRepository
 import com.digi.pizzaorderingapp.topicRepository
 
 @Composable
-fun ToppingSelectionScreen(modifier: Modifier = Modifier) {
+fun ToppingSelectionScreen(modifier: Modifier = Modifier, pizzaId: Int) {
+    val pizza = dummyPizzaRepository()[pizzaId]
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -37,6 +39,7 @@ fun ToppingSelectionScreen(modifier: Modifier = Modifier) {
                 fontSize = 24.sp,
                 modifier = Modifier.padding(8.dp)
             )
+            Text(text = "${pizza.title} selected", modifier = Modifier.padding(8.dp))
             Spacer(modifier = Modifier.padding(8.dp))
             LazyColumn(
                 contentPadding = PaddingValues(vertical = 16.dp),
@@ -45,7 +48,6 @@ fun ToppingSelectionScreen(modifier: Modifier = Modifier) {
                     ToppingItem(topping = it)
                 }
             }
-
         }
     }
 }
@@ -80,5 +82,5 @@ private fun ToppingItemPreview() {
 @Preview(showSystemUi = true)
 @Composable
 private fun TSSPreview() {
-    ToppingSelectionScreen()
+    ToppingSelectionScreen(pizzaId = 0)
 }
